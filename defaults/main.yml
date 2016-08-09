@@ -1,0 +1,6 @@
+# file: nginx/defaults/main.yml
+
+redis_revision:       "3.2.3"
+redis_download_url:   "http://download.redis.io/releases/redis-{{redis_revision}}.tar.gz"
+
+redis_bin_path: /usr/local/bin/

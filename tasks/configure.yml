@@ -1,0 +1,49 @@
+---
+
+- name: redis Install | Make sure config path exists
+  file:
+    path: /etc/redis
+    state: directory
+
+- name: redis Configure | Install the config.
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis/redis.conf
+
+- name: redis Configure | Install the init script.
+  template:
+    src: redis-server.init.j2
+    dest: /etc/init.d/redis-server
+    owner: root
+    group: root
+    mode: 0755
+  notify:
+    - restart redis-server
+
+
+- name: redis Configure | Test if we are using systemd
+  shell: "if [ -d /lib/systemd/system ] ; then echo 'true' ; else echo 'false' ; fi"
+  register: have_systemd
+
+
+- name: redis Configure | Install the systemd script if using systemd
+  template:
+    src: redis-server.service.systemd.j2
+    dest: /lib/systemd/system/nginx.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart redis-server
+  when: have_systemd.stdout == "true"
+
+
+- name: redis Configure | Reload scripts if using systemd
+  shell: "systemctl daemon-reload"
+  when: have_systemd.stdout == "true"
+
+
+- name: redis Configure | Register redis as a service
+  service:
+    name: redis-server
+    enabled: yes
