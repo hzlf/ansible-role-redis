@@ -4,7 +4,6 @@
     name: redis
     state: present
 
-
 - name: redis Install | Make sure the redis user is present
   user:
     name: redis

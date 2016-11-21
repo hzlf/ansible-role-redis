@@ -47,3 +47,5 @@
   service:
     name: redis-server
     enabled: yes
+  notify:
+    - restart redis-server

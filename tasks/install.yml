@@ -8,6 +8,7 @@
   with_items:
     - build-essential
     - git
+    - libjemalloc-dev
 
 - name: redis Install | Make sure repository path exists
   file:
